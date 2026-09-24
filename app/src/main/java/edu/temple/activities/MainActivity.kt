@@ -1,5 +1,6 @@
 package edu.temple.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -23,8 +24,10 @@ class MainActivity : AppCompatActivity() {
         with (findViewById<RecyclerView>(R.id.textSizeSelectorRecyclerView)) {
 
             // TODO Step 2: Implement lambda body to launch new activity and pass value
+            val launch_intent = Intent(this@MainActivity, DisplayActivity::class.java)
             adapter = TextSizeAdapter(textSizes){
-
+                startActivity(launch_intent)
+                launch_intent.putExtra("3", textSizes)
             }
             layoutManager = LinearLayoutManager(this@MainActivity)
         }
@@ -36,12 +39,12 @@ class MainActivity : AppCompatActivity() {
 
 
 /* Convert to RecyclerView.Adapter */
-class TextSizeAdapter (private val textSizes: Array<Int>, callback: (Int)->Unit) : RecyclerView.Adapter<TextSizeAdapter.TextSizeViewHolder>() {
+class TextSizeAdapter (private val textSizes: Array<Int>, private val callback: (Int)->Unit) : RecyclerView.Adapter<TextSizeAdapter.TextSizeViewHolder>() {
 
     // TODO Step 1: Complete onClickListener to return selected number
     inner class TextSizeViewHolder(val textView: TextView) : RecyclerView.ViewHolder (textView) {
         init {
-            textView.setOnClickListener {  }
+            textView.setOnClickListener { callback(textSizes[adapterPosition]) }
         }
     }
 
@@ -53,6 +56,7 @@ class TextSizeAdapter (private val textSizes: Array<Int>, callback: (Int)->Unit)
         holder.textView.apply {
             text = textSizes[position].toString()
             textSize = textSizes[position].toFloat()
+
         }
     }
 
